@@ -28,8 +28,8 @@ def moviePickUp(request):
         #num = str(n)
         # 영화 목록 url
     LIST_URL = f"https://api.themoviedb.org/3/discover/movie?api_key={TMD_KEY}&language=ko-KR&page=1"
-    request = urllib.request.Request(LIST_URL)
-    response = urllib.request.urlopen(request)
+    re_listurl = urllib.request.Request(LIST_URL)
+    response = urllib.request.urlopen(re_listurl)
     rescode = response.getcode()
     if(rescode==200):
         response_body = response.read()
@@ -42,15 +42,15 @@ def moviePickUp(request):
 
         # 영화 detail url
         DETAIL_URL = f"https://api.themoviedb.org/3/movie/{tmd_id}?api_key={TMD_KEY}&language=ko-KR"
-        request = urllib.request.Request(DETAIL_URL)
-        response = urllib.request.urlopen(request)
+        re_detailurl = urllib.request.Request(DETAIL_URL)
+        response = urllib.request.urlopen(re_detailurl)
         if (rescode == 200):
             response_body = response.read()
             detailData = json.loads(response_body.decode('utf-8'))
         # 영화 감독 //
         CREDITS_URL = f"https://api.themoviedb.org/3/movie/{tmd_id}/credits?api_key={TMD_KEY}"
-        request = urllib.request.Request(CREDITS_URL)
-        response = urllib.request.urlopen(request)
+        re_creditsurl = urllib.request.Request(CREDITS_URL)
+        response = urllib.request.urlopen(re_creditsurl)
         if (rescode == 200):
             response_body = response.read()
             resdirectors = json.loads(response_body.decode('utf-8'))
@@ -93,8 +93,7 @@ def moviePickUp(request):
 
 
         Movie.objects.get_or_create(
-        # movie = Movie(
-
+        #movie = Movie(
             title=resData['title'],
             backdrop_path="https://image.tmdb.org/t/p/original" + resData['backdrop_path'],
             poster_path="https://image.tmdb.org/t/p/original" + resData['poster_path'],
@@ -106,7 +105,7 @@ def moviePickUp(request):
             director=director,
             homepage=homepage,
         )
-        # movie.save()
+        #movie.save()
 
         # print(movie)
     return render(request, 'movies/moviePickUp.html')
@@ -116,7 +115,7 @@ def main(request):
     # pagination //
     movie_list = Movie.objects.all()
     paginator = Paginator(movie_list, 20)  # Show 20 contacts per page
-    page = request['page']
+    page = request.GET.get('page')
     try:
         movies = paginator.page(page)
     except PageNotAnInteger:
@@ -177,8 +176,8 @@ def detail(request, id):
     # 추천 영화 보여주기 //
     TMD_KEY = '37a3092ff9c0a61c3819bc65e4ab09c5'
     RECOMMEND_URL = f"https://api.themoviedb.org/3/movie/{movie.tmd_id}/recommendations?api_key={TMD_KEY}&language=ko-KR"
-    request = urllib.request.Request(RECOMMEND_URL)
-    response = urllib.request.urlopen(request)
+    recommendss = urllib.request.Request(RECOMMEND_URL)
+    response = urllib.request.urlopen(recommendss)
     rescode = response.getcode()
     if (rescode == 200):
         response_body = response.read()
@@ -213,12 +212,11 @@ def detail(request, id):
                 ul = id
             res.append({'ig': ig, 'ul': ul})
     # // 영화 추천
-    return render(request, 'movies/detail.html',
-                  {'movie': movie, 'comment_form': comment_form, 'res': res, "ratingAvg": ratingAvg})
+    return render(request, 'movies/detail.html')
 
 
 def search(request):
-    movie = Movie.objects.get_queryset().order_by('id')
+    movie = Movie.objects.all()
     # GET request의 인자중에 searchword값이 있으면 가져오고, 없으면 빈 문자열 넣기
     if request.method == "GET":
         searchword = request.GET.get('searchword', '')
