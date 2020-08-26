@@ -12,7 +12,7 @@ def cleanhtml(raw_html):
 def text():
     TMD_KEY = '37a3092ff9c0a61c3819bc65e4ab09c5'
 
-    LIST_URL = f"https://api.themoviedb.org/3/movie/66115?api_key={TMD_KEY}&language=ko-KR"
+    LIST_URL = f"https://api.themoviedb.org/3/movie/66261/recommendations?api_key={TMD_KEY}&language=ko-KR"
 
     request = urllib.request.Request(LIST_URL)
     response = urllib.request.urlopen(request)
@@ -21,7 +21,9 @@ def text():
         response_body = response.read()
         d = json.loads(response_body.decode('utf-8'))
         if (d):
+            print(d)
             return d
+
         else:
             return None
 
@@ -98,5 +100,4 @@ def moviePickUp():
             genre = ""
         print(detailData)
 
-
-moviePickUp()
+text()

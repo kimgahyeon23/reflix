@@ -171,7 +171,7 @@ def detail(request, id):
         ratingAvg = 0
     else:
         ratingAvg = ratings / movie.score_set.all().count()
-    ratingAvg = round(ratingAvg, 2)
+        ratingAvg = round(ratingAvg, 2)
 
     # 추천 영화 보여주기 //
     TMD_KEY = '37a3092ff9c0a61c3819bc65e4ab09c5'
@@ -185,33 +185,33 @@ def detail(request, id):
 
     # 영화 추천 //
     # 추천 영화가 5개보다 작을때와 클때로 구분
-    res = []
-    resRecommend = resRecommends['result']
-    if (len(resRecommend) > 5):
-        for i in range(5):
-            ig = "https://image.tmdb.org/t/p/w500" + resRecommends[i]['poster_path']
-            url = resRecommend[i]['id']
-            if Movie.objects.filter(tmd_id=url):
-                # 추천 영화가 db에 있다면
-                recommend = Movie.objects.get(tmd_id=url)
-                ul = recommend.id
-            else:
-                # 없으면 현재 페이지 영화 id 사용
-                ul = id
-            res.append({'ig': ig, 'ul': ul})
-    else:
-        for j in range(len(resRecommend)):
-            ig = "https://image.tmdb.org/t/p/w500" + resRecommend[j].get('poster_path')
-            url = resRecommend[j].get('id')
-            if Movie.objects.filter(tmd_id=url):
-                # 추천 영화가 db에 있다면
-                recommend = Movie.objects.get(tmd_id=url)
-                ul = recommend.id
-            else:
-                # 없으면 현재 페이지 영화 id 사용
-                ul = id
-            res.append({'ig': ig, 'ul': ul})
-    # // 영화 추천
+    # res = []
+    # resRecommend = resRecommends['results']
+    # if (len(resRecommend) > 5):
+    #     for i in range(5):
+    #         ig = "https://image.tmdb.org/t/p/w500" + resRecommends[i]['poster_path']
+    #         url = resRecommend[i]['id']
+    #         if Movie.objects.filter(tmd_id=url):
+    #             # 추천 영화가 db에 있다면
+    #             recommend = Movie.objects.get(tmd_id=url)
+    #             ul = recommend.id
+    #         else:
+    #             # 없으면 현재 페이지 영화 id 사용
+    #             ul = id
+    #         res.append({'ig': ig, 'ul': ul})
+    # else:
+    #     for j in range(len(resRecommend)):
+    #         ig = "https://image.tmdb.org/t/p/w500" + resRecommend[j].get('poster_path')
+    #         url = resRecommend[j].get('id')
+    #         if Movie.objects.filter(tmd_id=url):
+    #             # 추천 영화가 db에 있다면
+    #             recommend = Movie.objects.get(tmd_id=url)
+    #             ul = recommend.id
+    #         else:
+    #             # 없으면 현재 페이지 영화 id 사용
+    #             ul = id
+    #         res.append({'ig': ig, 'ul': ul})
+    # # // 영화 추천
     return render(request, 'movies/detail.html')
 
 
