@@ -80,9 +80,9 @@
         {% if user.is_authenticated %}
         
         <div class="col-10">
-            <form action="{% url 'movies:commentCreate' movie.id %}" method="post">
+            <form action="{% url 'movies:commentCreate' movie.id %}" method="POST">
                 {% csrf_token %}
-                {% bootstrap_form comment_form %} 
+                {% bootstrap_form comment_form %}
                 <input type="submit" value="작성" class="btn btn-warning btn-sm">
             </form>
         {% endif %}
@@ -95,7 +95,7 @@
                     
                 <!--댓글 삭제-->
                 {% if comment.user == user %}
-                    <form method='post' action="{% url 'movies:commentDelete' movie.id comment.id %}" style="display: inline-block ">
+                    <form method='POST' action="{% url 'movies:commentDelete' movie.id comment.id %}" style="display: inline-block ">
                         {% csrf_token %}
                         <input type="submit" value="삭제" class="btn btn-danger btn-sm"/>
                     </form>

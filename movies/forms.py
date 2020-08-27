@@ -17,5 +17,5 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model=Comment
         # comment만 입력받기
-        fields = ['content',]
+        fields = ['content']
         

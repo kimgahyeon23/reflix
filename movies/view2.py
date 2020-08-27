@@ -185,34 +185,34 @@ def detail(request, id):
 
     # 영화 추천 //
     # 추천 영화가 5개보다 작을때와 클때로 구분
-    # res = []
-    # resRecommend = resRecommends['results']
-    # if (len(resRecommend) > 5):
-    #     for i in range(5):
-    #         ig = "https://image.tmdb.org/t/p/w500" + resRecommends[i]['poster_path']
-    #         url = resRecommend[i]['id']
-    #         if Movie.objects.filter(tmd_id=url):
-    #             # 추천 영화가 db에 있다면
-    #             recommend = Movie.objects.get(tmd_id=url)
-    #             ul = recommend.id
-    #         else:
-    #             # 없으면 현재 페이지 영화 id 사용
-    #             ul = id
-    #         res.append({'ig': ig, 'ul': ul})
-    # else:
-    #     for j in range(len(resRecommend)):
-    #         ig = "https://image.tmdb.org/t/p/w500" + resRecommend[j].get('poster_path')
-    #         url = resRecommend[j].get('id')
-    #         if Movie.objects.filter(tmd_id=url):
-    #             # 추천 영화가 db에 있다면
-    #             recommend = Movie.objects.get(tmd_id=url)
-    #             ul = recommend.id
-    #         else:
-    #             # 없으면 현재 페이지 영화 id 사용
-    #             ul = id
-    #         res.append({'ig': ig, 'ul': ul})
-    # # // 영화 추천
-    return render(request, 'movies/detail.html')
+    res = []
+    resRecommend = resRecommends['results']
+    if (len(resRecommend) > 5):
+        for i in range(5):
+            ig = "https://image.tmdb.org/t/p/w500" + resRecommend[i].get('poster_path')
+            url = resRecommend[i]['id']
+            if Movie.objects.filter(tmd_id=url):
+                # 추천 영화가 db에 있다면
+                recommend = Movie.objects.get(tmd_id=url)
+                ul = recommend.id
+            else:
+                # 없으면 현재 페이지 영화 id 사용
+                ul = id
+            res.append({'ig': ig, 'ul': ul})
+    else:
+        for j in range(len(resRecommend)):
+            ig = "https://image.tmdb.org/t/p/w500" + resRecommend[j].get('poster_path')
+            url = resRecommend[j].get('id')
+            if Movie.objects.filter(tmd_id=url):
+                # 추천 영화가 db에 있다면
+                recommend = Movie.objects.get(tmd_id=url)
+                ul = recommend.id
+            else:
+                # 없으면 현재 페이지 영화 id 사용
+                ul = id
+            res.append({'ig': ig, 'ul': ul})
+    # // 영화 추천
+    return render(request, 'movies/detail.html',{'movie': movie, 'res' : res ,' ratingAvg' : ratingAvg})
 
 
 def search(request):
@@ -259,7 +259,7 @@ def commentCreate(request, id):
         comment.movie = movie
         comment.save()
 
-    return redirect('movies:detail', id)
+    return redirect('movies:detail',id)
 
 
 # 댓글 삭제하기
@@ -295,8 +295,8 @@ def person(request):
     TMD_KEY = '37a3092ff9c0a61c3819bc65e4ab09c5'
     PERSON_URL = f"https://api.themoviedb.org/3/person/popular?api_key={TMD_KEY}&language=ko-KR"
 
-    request = urllib.request.Request(PERSON_URL)
-    response = urllib.request.urlopen(request)
+    persons = urllib.request.Request(PERSON_URL)
+    response = urllib.request.urlopen(persons)
     rescode = response.getcode()
     if (rescode == 200):
         response_body = response.read()
